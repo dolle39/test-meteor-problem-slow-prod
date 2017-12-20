@@ -6,6 +6,8 @@ import incompleteCountDenormalizer from './incompleteCountDenormalizer.js';
 
 import { Lists } from '../lists/lists.js';
 
+export const TestCol = new Mongo.Collection('testcol');
+
 class TodosCollection extends Mongo.Collection {
   insert(doc, callback) {
     const ourDoc = doc;

@@ -14,6 +14,8 @@ import { $ } from 'meteor/jquery';
 import { Lists } from '../../api/lists/lists.js';
 import { insert } from '../../api/lists/methods.js';
 
+import { TestCol } from '../../api/todos/todos.js';
+
 import '../components/loading.js';
 import './app-body.html';
 
@@ -38,6 +40,7 @@ Meteor.startup(() => {
 Template.App_body.onCreated(function appBodyOnCreated() {
   this.subscribe('lists.public');
   this.subscribe('lists.private');
+  this.subscribe('testcol');
 
   this.state = new ReactiveDict();
   this.state.setDefault({
@@ -47,6 +50,9 @@ Template.App_body.onCreated(function appBodyOnCreated() {
 });
 
 Template.App_body.helpers({
+  testCols() {
+    return TestCol.find({}).fetch();
+  },
   menuOpen() {
     const instance = Template.instance();
     return instance.state.get('menuOpen') && 'menu-open';

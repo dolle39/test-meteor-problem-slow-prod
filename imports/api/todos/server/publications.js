@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Todos } from '../todos.js';
+import { TestCol } from '../todos.js';
 import { Lists } from '../../lists/lists.js';
 
 Meteor.publishComposite('todos.inList', function todosInList(params) {
@@ -36,4 +37,38 @@ Meteor.publishComposite('todos.inList', function todosInList(params) {
       },
     }],
   };
+});
+
+Meteor.publish('testcol', function() {
+  return TestCol.find({});
+});
+
+
+Meteor.methods({
+  myBatchJobFillDatabase(count) {
+    check(count, Number);
+    console.log("Creating "+ count + " items.");
+    for (var i = 0; i < count; ++i) {
+      TestCol.insert({
+        name: "hejsan",
+        a: "testProp-a",
+        b: "testProp-a",
+        c: "testProp-a",
+        d: "testProp-a"
+      });
+    }
+  },
+  myBatchJobUpdate(name) {
+    check(name, String);
+    var ids = TestCol.find({}, {fields: {_id: 1}}).fetch();
+    var j = 0;
+    for(var i = ids.length - 1; i >= 0; --i) {
+      TestCol.update(ids[i], {$set: {name: name}});
+      let start = new Date();
+      var item = TestCol.findOne(ids[i]);
+      let end = new Date() - start;
+      console.log(`Find item with id=${item._id} took time=${end} ms`);
+      ++j;
+    }
+  }
 });
